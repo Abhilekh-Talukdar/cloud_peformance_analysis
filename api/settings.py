@@ -12,20 +12,29 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 
+from api.config import (
+    get_allowed_hosts,
+    get_bool_setting,
+    get_secret_key,
+    get_sqlite_database_path,
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+# Keep deployment-specific values outside source control. The previously
+# committed key must be considered compromised and replaced in every deploy.
+SECRET_KEY = get_secret_key()
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-rk_in)!@-p&=0fk_f_sc=axdi!5pl5q^+5((m_+w8o(3_cxx19'
+# Safe defaults: production mode and loopback-only hosts.
+DEBUG = get_bool_setting("DJANGO_DEBUG", default=False)
+ALLOWED_HOSTS = get_allowed_hosts()
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
+# Local HTTP development is supported when DJANGO_DEBUG=true. Production
+# deployments must serve the application over HTTPS.
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
 
 
 # Application definition
@@ -78,7 +87,7 @@ WSGI_APPLICATION = 'api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': '/home/g143myspecialone/database.sqlite',
+        'NAME': get_sqlite_database_path(BASE_DIR),
     }
 }
 
