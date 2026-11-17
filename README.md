@@ -22,7 +22,7 @@ Required configuration:
 - `DJANGO_SECRET_KEY`: a randomly generated secret, supplied through a deployment secret manager.
 - `DJANGO_ALLOWED_HOSTS`: comma-separated hostnames served by the deployment. The default is limited to `localhost` and `127.0.0.1`; wildcard hosts are rejected.
 - `DJANGO_DEBUG`: optional strict boolean (`true/false`, `1/0`, `yes/no`, or `on/off`). It defaults to `false`.
-- `DJANGO_SQLITE_PATH`: optional SQLite database path. Relative paths are resolved from the project directory; the default is `db.sqlite3` in the project directory.
+- `DJANGO_SQLITE_PATH`: optional SQLite database path. Relative paths are resolved from the project directory; the default is `db.sqlite3` in the project directory. When deploying an existing database, set this to its current path before startup to avoid creating a new, empty database.
 
 For local development, create a fresh key and explicitly enable debug mode:
 
