@@ -6,10 +6,13 @@ Methodology:
 
 - Cloud Environment Setup: The project utilized AWS (t2.medium) and GCP (e2-medium) instances to ensure a comparable testing environment.
 - Performance Testing Framework: The Django framework was chosen for its ability to handle API requests and facilitate performance measurements.
-- Load Testing Tool: JMeter, a widely used open-source load testing tool, was employed to simulate user traffic and measure response times under heavy loads.
+- Load Testing Tool: JMeter, a widely used open-source tool, was employed to simulate user traffic and measure response times under heavy loads.
 - Data Collection and Analysis: Data collected during the testing process, including CPU usage, latency, and throughput, was stored in a SQLite database for further analysis. This allowed for comprehensive evaluation and comparison of the two cloud platforms.
-
 
 Results:
 
 The findings revealed that AWS outperformed GCP in terms of CPU processing and throughput, while GCP demonstrated slightly better latency and zero error rate. This information is crucial for users to consider when making choices based on their specific requirements and priorities.
+
+## Review API
+
+The `GET /api/reviews/` endpoint accepts an optional `score` query parameter. When supplied, it returns reviews whose score is greater than or equal to the requested threshold (for example, `/api/reviews/?score=8.0`). The value must be a finite number; malformed values such as `score=high` and non-finite values such as `score=NaN` receive a `400 Bad Request` response.

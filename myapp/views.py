@@ -1,23 +1,22 @@
-from django.shortcuts import render
-
-# Create your views here.
-
 from rest_framework import generics
+from rest_framework.exceptions import ValidationError
+
+from api.score_filter import parse_score_filter
 from .models import Review
 from .serializers import ReviewSerializer
 
-from django.db.models import FloatField
-from django.db.models.functions import Cast
 
 class ReviewListView(generics.ListAPIView):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        """
-        Optionally filter the queryset based on the 'score' parameter in the URL.
-        """
+        """Optionally filter reviews by a finite numeric score threshold."""
         queryset = Review.objects.all()
-        score = self.request.query_params.get('score', None)
+        try:
+            score = parse_score_filter(self.request.query_params.get("score"))
+        except ValueError as error:
+            raise ValidationError({"score": str(error)}) from error
+
         if score is not None:
             queryset = queryset.filter(score__gte=score)
         return queryset
